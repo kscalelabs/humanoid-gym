@@ -451,8 +451,8 @@ class LeggedRobot(BaseTask):
         self.base_quat = self.root_states[:, 3:7]
         self.base_euler_xyz = get_euler_xyz_tensor(self.base_quat)
 
-        self.contact_forces = gymtorch.wrap_tensor(net_contact_forces).view(self.num_envs, -1, 3) # shape: num_envs, num_bodies, xyz axis
-        self.rigid_state = gymtorch.wrap_tensor(rigid_body_state).view(self.num_envs, 13, 13)
+        self.contact_forces = gymtorch.wrap_tensor(net_contact_forces).view(self.num_envs, self.num_bodies, 3)
+        self.rigid_state = gymtorch.wrap_tensor(rigid_body_state).view(self.num_envs, self.num_bodies, 13)
 
         # initialize some data used later on
         self.common_step_counter = 0
@@ -496,7 +496,7 @@ class LeggedRobot(BaseTask):
             if not found:
                 self.p_gains[:, i] = 0.
                 self.d_gains[:, i] = 0.
-                print(f"PD gain of joint {name} were not defined, setting them to zero")
+                # print(f"PD gain of joint {name} were not defined, setting them to zero")
         
 
         self.rand_push_force = torch.zeros((self.num_envs, 3), dtype=torch.float32, device=self.device)
