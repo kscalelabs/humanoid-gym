@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2021 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-FileCopyrightText: Copyright (c) 2021 ETH Zurich, Nikita Rudin
 # SPDX-License-Identifier: BSD-3-Clause
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
 #
@@ -155,6 +155,20 @@ def update_cfg_from_args(env_cfg, cfg_train, args):
         if args.checkpoint is not None:
             cfg_train.runner.checkpoint = args.checkpoint
 
+        # alg PPO parameters
+        if args.lr is not None:
+            cfg_train.algorithm.learning_rate = args.lr
+        if args.entropy_coef is not None:
+            cfg_train.algorithm.entropy_coef = args.entropy_coef
+        if args.vl_coef is not None:
+            cfg_train.algorithm.value_loss_coef = args.vl_coef
+        if args.gamma is not None:
+            cfg_train.algorithm.gamma = args.gamma
+        if args.lam is not None:
+            cfg_train.algorithm.lam = args.lam
+        if args.max_grad_norm is not None:
+            cfg_train.algorithm.max_grad_norm = args.max_grad_norm
+
     return env_cfg, cfg_train
 
 
@@ -223,8 +237,46 @@ def get_args():
         {
             "name": "--max_iterations",
             "type": int,
-            "help": "Maximum number of training iterations. Overrides config file if provided.",
+            "default": "3000",
+            "help": "Number of policy updates. Overrides config file if provided.",
         },
+        {
+            "name": "--lr",
+            "type": float,
+            "default": "1.e-3",
+            "help": "Learning rate. Overrides config file if provided."
+        },
+        {
+            "name": "--entropy_coef",
+            "type": float,
+            "default": "0.01",
+            "help": "Entropy coefficient. Overrides config file if provided."
+        },
+        {
+            "name": "--vl_coef",
+            "type": float,
+            "default": "1.0",
+            "help": "Value loss coefficient. Overrides config file if provided."
+        },
+        {
+            "name": "--gamma",
+            "type": float,
+            "default": "0.99",
+            "help": "Discount factor. Overrides config file if provided."
+        },
+        {
+            "name": "--lam",
+            "type": float,
+            "default": "0.95",
+            "help": "GAE lambda. Overrides config file if provided."
+        },
+        {
+            "name": "--max_grad_norm",
+            "type": float,
+            "default": "1.0",
+            "help": "Maximum gradient norm. Overrides config file if provided."
+        },
+
     ]
     # parse arguments
     args = gymutil.parse_arguments(
