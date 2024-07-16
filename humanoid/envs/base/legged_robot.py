@@ -748,11 +748,8 @@ class LeggedRobot(BaseTask):
             self.gym.set_actor_dof_properties(env_handle, actor_handle, dof_props)
             body_props = self.gym.get_actor_rigid_body_properties(env_handle, actor_handle)
             body_props = self._process_rigid_body_props(body_props, i)
-            # is2ac changed masses to 1
-            # for j, prop in enumerate(body_props):
-            #     prop.mass = 1
 
-            self.gym.set_actor_rigid_body_properties(env_handle, actor_handle, body_props, recomputeInertia=True)
+            self.gym.set_actor_rigid_body_properties(env_handle, actor_handle, body_props, recomputeInertia=False)
             self.envs.append(env_handle)
             self.actor_handles.append(actor_handle)
 
